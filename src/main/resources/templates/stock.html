@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Trading</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>주식 거래</h2>
+    <p th:if="${result}" class="alert alert-info" th:text="${result}"></p>
+
+    <form th:action="@{/stock/buy}" method="post" class="row g-3 mb-3">
+        <h5>매수 주문</h5>
+        <div class="col-md-3">
+            <select name="productId" class="form-select" required>
+                <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">Sample</option>
+            </select>
+        </div>
+        <div class="col-md-3"><input name="amount" class="form-control" placeholder="수량" required></div>
+        <div class="col-md-3"><input name="price" class="form-control" placeholder="가격" required></div>
+        <div class="col-md-3"><button class="btn btn-success">매수</button></div>
+    </form>
+
+    <form th:action="@{/stock/sell}" method="post" class="row g-3 mb-3">
+        <h5>매도 주문</h5>
+        <div class="col-md-3">
+            <select name="productId" class="form-select" required>
+                <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">Sample</option>
+            </select>
+        </div>
+        <div class="col-md-3"><input name="amount" class="form-control" placeholder="수량" required></div>
+        <div class="col-md-3"><input name="price" class="form-control" placeholder="가격" required></div>
+        <div class="col-md-3"><button class="btn btn-danger">매도</button></div>
+    </form>
+
+
+    <a href="/matched" class="btn btn-primary mt-3">체결 내역 보기</a>
+    <a href="/pending" class="btn btn-secondary mt-3">미체결 내역 보기</a>
+    <a href="/price" class="btn btn-info mt-3">현재가 보기</a>
+</div>
+</body>
+</html>
