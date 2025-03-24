@@ -1,18 +1,21 @@
 package com.example.finport.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Entity
+@Data
 public class User {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
+
     private String name;
     private double asset;
+    private String password; // 로그인용 패스워드 추가
 
     @OneToMany(mappedBy = "user")
     private List<Request> requests;
