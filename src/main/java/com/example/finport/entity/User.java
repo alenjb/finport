@@ -22,4 +22,13 @@ public class User {
 
     @ElementCollection
     private Map<Long, Integer> ownedStocks = new HashMap<>();
+
+    public void addStock(Long stockId, int quantity) {
+        ownedStocks.put(stockId, ownedStocks.getOrDefault(stockId, 0) + quantity);
+    }
+
+    public void removeStock(Long stockId, int quantity) {
+        ownedStocks.put(stockId, ownedStocks.getOrDefault(stockId, 0) - quantity);
+        if (ownedStocks.get(stockId) <= 0) ownedStocks.remove(stockId);
+    }
 }

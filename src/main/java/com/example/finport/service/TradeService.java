@@ -68,14 +68,35 @@ public class TradeService {
                 agreement.setCreatedAt(LocalDateTime.now());
                 agreementRepo.save(agreement);
 
-                // update matched & stock price
                 buy.setMatched(true);
                 sell.setMatched(true);
                 requestRepo.saveAll(List.of(buy, sell));
 
                 Stock stock = buy.getStock();
-                stock.setCurrentPrice(sell.getPrice());
+                double matchedPrice = sell.getPrice();
+                stock.setCurrentPrice(matchedPrice);
+
+                // 🔁 상한가/하한가 갱신
+                if (stock.getUpperLimitPrice() == 0 || matchedPrice > stock.getUpperLimitPrice()) {
+                    stock.setUpperLimitPrice(matchedPrice);
+                }
+                if (stock.getLowerLimitPrice() == 0 || matchedPrice < stock.getLowerLimitPrice()) {
+                    stock.setLowerLimitPrice(matchedPrice);
+                }
                 stockRepo.save(stock);
+
+                // 📊 자산 및 주식 반영
+                double totalPrice = matchedPrice * buy.getQuantity();
+
+                User buyer = buy.getUser();
+                buyer.setAsset(buyer.getAsset() - totalPrice);
+                buyer.addStock(stock.getId(), buy.getQuantity());
+
+                User seller = sell.getUser();
+                seller.setAsset(seller.getAsset() + totalPrice);
+                seller.removeStock(stock.getId(), sell.getQuantity());
+
+                userRepo.saveAll(List.of(buyer, seller));
                 break;
             }
         }
