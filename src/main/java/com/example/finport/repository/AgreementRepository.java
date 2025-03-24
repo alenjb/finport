@@ -8,4 +8,5 @@ import java.util.List;
 public interface AgreementRepository extends JpaRepository<Agreement, Long> {
     List<Agreement> findByBuyerIdOrSellerId(Long buyerId, Long sellerId);
     List<Agreement> findAllByOrderByCreatedAtDesc();
+    List<Agreement> findAllByStockIdOrderByCreatedAtAsc(Long stockId);
 }
